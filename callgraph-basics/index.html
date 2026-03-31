@@ -1,0 +1,1759 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://cg4j.net/callgraph-basics/">
+      
+      
+        <link rel="prev" href="../architecture/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/cg4j-logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Call Graphs Basics - CG4j</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#call-graph-basics" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="CG4j" class="md-header__button md-logo" aria-label="CG4j" data-md-component="logo">
+      
+  <img src="../assets/cg4j-logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CG4j
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Call Graphs Basics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cg4j/cg4j" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cg4j/cg4j
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quickstart
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Call Graphs Basics
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="CG4j" class="md-nav__button md-logo" aria-label="CG4j" data-md-component="logo">
+      
+  <img src="../assets/cg4j-logo.svg" alt="logo">
+
+    </a>
+    CG4j
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cg4j/cg4j" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cg4j/cg4j
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Call Graphs Basics
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Call Graphs Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-call-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Call Graph?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-are-call-graphs-useful" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Are Call Graphs Useful?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types-of-method-calls-in-java" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types of Method Calls in Java
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Types of Method Calls in Java">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-calls-invokestatic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static Calls (invokestatic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-calls-invokevirtual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual Calls (invokevirtual)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#special-calls-invokespecial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Special Calls (invokespecial)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interface-calls-invokeinterface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interface Calls (invokeinterface)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-calls-invokedynamic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Calls (invokedynamic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-matters-for-call-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters for Call Graphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#call-graph-construction-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Call Graph Construction Algorithms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Call Graph Construction Algorithms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#class-hierarchy-analysis-cha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class Hierarchy Analysis (CHA)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Class Hierarchy Analysis (CHA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-cha-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How CHA Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cha-trade-offs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CHA Trade-offs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rapid-type-analysis-rta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rapid Type Analysis (RTA)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rapid Type Analysis (RTA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-rta-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How RTA Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rta-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RTA Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rta-trade-offs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RTA Trade-offs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cha-vs-rta-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CHA vs RTA Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-each-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Each Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-cg4j-uses-these-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How cg4j Uses These Algorithms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How cg4j Uses These Algorithms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wala-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WALA Engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asm-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ASM Engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worklist-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worklist Algorithm
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Worklist Algorithm">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-fixed-point-iteration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Fixed-Point Iteration?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-cg4j-builds-call-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How cg4j Builds Call Graphs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-cg4j-handles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What cg4j Handles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-cg4j-may-miss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What cg4j May Miss
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Further Reading
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foundational-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundational Papers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-call-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Call Graph?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-are-call-graphs-useful" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Are Call Graphs Useful?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types-of-method-calls-in-java" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types of Method Calls in Java
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Types of Method Calls in Java">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-calls-invokestatic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static Calls (invokestatic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virtual-calls-invokevirtual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virtual Calls (invokevirtual)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#special-calls-invokespecial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Special Calls (invokespecial)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interface-calls-invokeinterface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interface Calls (invokeinterface)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-calls-invokedynamic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Calls (invokedynamic)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-matters-for-call-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters for Call Graphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#call-graph-construction-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Call Graph Construction Algorithms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Call Graph Construction Algorithms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#class-hierarchy-analysis-cha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class Hierarchy Analysis (CHA)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Class Hierarchy Analysis (CHA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-cha-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How CHA Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cha-trade-offs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CHA Trade-offs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rapid-type-analysis-rta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rapid Type Analysis (RTA)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rapid Type Analysis (RTA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-rta-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How RTA Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rta-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RTA Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rta-trade-offs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RTA Trade-offs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cha-vs-rta-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CHA vs RTA Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-each-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Each Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-cg4j-uses-these-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How cg4j Uses These Algorithms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How cg4j Uses These Algorithms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wala-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WALA Engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asm-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ASM Engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worklist-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worklist Algorithm
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Worklist Algorithm">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-fixed-point-iteration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Fixed-Point Iteration?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-cg4j-builds-call-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How cg4j Builds Call Graphs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limitations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-cg4j-handles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What cg4j Handles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-cg4j-may-miss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What cg4j May Miss
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terminology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Further Reading
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foundational-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundational Papers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="call-graph-basics">Call Graph Basics</h1>
+<p>This document explains the core concepts behind call graph generation in cg4j.</p>
+<h2 id="what-is-a-call-graph">What is a Call Graph?</h2>
+<p>A <strong>call graph</strong> is a directed graph that represents calling relationships between methods in a program.</p>
+<ul>
+<li><strong>Nodes</strong>: Methods in your program</li>
+<li><strong>Edges</strong>: Method calls (A → B means "method A calls method B")</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>main() → processData()
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>processData() → readFile()
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>processData() → writeFile()
+</span></code></pre></div>
+<h2 id="why-are-call-graphs-useful">Why Are Call Graphs Useful?</h2>
+<ul>
+<li><strong>Program understanding</strong>: Visualize how code flows through your application</li>
+<li><strong>Impact analysis</strong>: Find what breaks when you change a method</li>
+<li><strong>Security analysis</strong>: Trace paths to sensitive operations</li>
+<li><strong>Dead code detection</strong>: Find unreachable methods</li>
+<li><strong>Testing</strong>: Identify test coverage gaps</li>
+</ul>
+<h2 id="types-of-method-calls-in-java">Types of Method Calls in Java</h2>
+<p>Understanding how method calls work at the bytecode level is essential for call graph construction.</p>
+<h3 id="static-calls-invokestatic">Static Calls (invokestatic)</h3>
+<p>Static calls invoke methods declared with the <code>static</code> keyword. These belong to the class itself rather than to instances. The target method is resolved at compile time because static methods cannot be overridden.</p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Math</span><span class="p">.</span><span class="na">abs</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">);</span><span class="w">           </span><span class="c1">// Static call</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">Collections</span><span class="p">.</span><span class="na">sort</span><span class="p">(</span><span class="n">list</span><span class="p">);</span><span class="w"> </span><span class="c1">// Static call</span>
+</span></code></pre></div>
+<h3 id="virtual-calls-invokevirtual">Virtual Calls (invokevirtual)</h3>
+<p>Virtual calls invoke non-static instance methods that can be overridden by subclasses. The JVM determines at runtime which implementation to execute based on the actual object type, not the declared type. This enables polymorphism - all instance methods in Java are virtual by default.</p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">Animal</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Dog</span><span class="p">();</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">a</span><span class="p">.</span><span class="na">speak</span><span class="p">();</span><span class="w">  </span><span class="c1">// Virtual call - resolved at runtime to Dog.speak()</span>
+</span></code></pre></div>
+<p><strong>Exception cases</strong> (resolved statically):
+- <strong>Private methods</strong>: Cannot be overridden
+- <strong>Final methods</strong>: Cannot be overridden
+- <strong>Super calls</strong>: <code>super.method()</code> always calls the superclass implementation</p>
+<h3 id="special-calls-invokespecial">Special Calls (invokespecial)</h3>
+<p>Special calls invoke constructors, superclass methods, and private methods. They are resolved statically because the target is unambiguous.</p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">      </span><span class="c1">// Constructor call</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">super</span><span class="p">.</span><span class="na">toString</span><span class="p">();</span><span class="w">       </span><span class="c1">// Superclass method call</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">this</span><span class="p">.</span><span class="na">privateMethod</span><span class="p">();</span><span class="w">   </span><span class="c1">// Private method call</span>
+</span></code></pre></div>
+<h3 id="interface-calls-invokeinterface">Interface Calls (invokeinterface)</h3>
+<p>Interface calls invoke methods declared in interfaces. Similar to virtual calls, the actual implementation is resolved at runtime based on the object's type.</p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">list</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// Interface call - resolved to ArrayList.add()</span>
+</span></code></pre></div>
+<h3 id="dynamic-calls-invokedynamic">Dynamic Calls (invokedynamic)</h3>
+<p>Dynamic calls use the <code>invokedynamic</code> bytecode instruction, introduced for dynamically-typed JVM languages. Java uses it for lambda expressions and method references. The cg4j ASM engine handles lambda metafactory calls by creating synthetic lambda classes.</p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">list</span><span class="p">.</span><span class="na">forEach</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">x</span><span class="p">));</span><span class="w">  </span><span class="c1">// Lambda uses invokedynamic</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">Function</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">String</span><span class="p">::</span><span class="n">length</span><span class="p">;</span><span class="w">  </span><span class="c1">// Method reference uses invokedynamic</span>
+</span></code></pre></div>
+<p><strong>How cg4j handles lambdas:</strong>
+- Detects <code>LambdaMetafactory.metafactory</code> bootstrap methods
+- Creates synthetic classes matching WALA's <code>wala/lambda$...</code> naming convention
+- Generates two-hop edges: caller → synthetic SAM method → lambda body</p>
+<h3 id="why-this-matters-for-call-graphs">Why This Matters for Call Graphs</h3>
+<p>Static and special calls have a single target - easy to resolve. Virtual and interface calls are the challenge: the target depends on the runtime type. This is why call graph algorithms like CHA and RTA exist - they approximate which implementations might be called at virtual call sites.</p>
+<h2 id="call-graph-construction-algorithms">Call Graph Construction Algorithms</h2>
+<p>There are two common algorithms for resolving virtual method calls: <strong>CHA</strong> and <strong>RTA</strong>. cg4j uses RTA for its analysis.</p>
+<h3 id="class-hierarchy-analysis-cha">Class Hierarchy Analysis (CHA)</h3>
+<p><strong>CHA</strong> is a fast algorithm that determines which methods might be called at a call site.</p>
+<h4 id="the-problem">The Problem</h4>
+<p>In object-oriented programs, method calls can be dynamic:</p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">Animal</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getAnimal</span><span class="p">();</span><span class="w"> </span><span class="c1">// Could be Dog, Cat, Bird...</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">a</span><span class="p">.</span><span class="na">speak</span><span class="p">();</span><span class="w">              </span><span class="c1">// Which speak() method runs?</span>
+</span></code></pre></div>
+<h4 id="how-cha-works">How CHA Works</h4>
+<p>CHA uses the class hierarchy (inheritance tree) to find all possible targets:</p>
+<ol>
+<li>Look at the declared type (<code>Animal</code>)</li>
+<li>Find all subclasses in the hierarchy (<code>Dog</code>, <code>Cat</code>, <code>Bird</code>)</li>
+<li>Include all implementations of the method (<code>speak()</code>)</li>
+</ol>
+<p><strong>Result</strong>: Conservative approximation - includes <strong>all</strong> subtypes in the hierarchy, even if they're never instantiated.</p>
+<h4 id="cha-trade-offs">CHA Trade-offs</h4>
+<p>✅ <strong>Pros:</strong>
+- Very fast to compute
+- Simple to understand
+- Sound (won't miss real calls)
+- No need to analyze method bodies</p>
+<p>❌ <strong>Cons:</strong>
+- Over-approximates (includes impossible calls)
+- Creates edges to methods of classes never instantiated
+- Less precise than type-sensitive analyses</p>
+<h3 id="rapid-type-analysis-rta">Rapid Type Analysis (RTA)</h3>
+<p><strong>RTA</strong> is a more precise algorithm that only considers <strong>instantiated types</strong>.</p>
+<h4 id="how-rta-works">How RTA Works</h4>
+<p>RTA tracks which classes are actually instantiated (created with <code>new</code>) during analysis:</p>
+<ol>
+<li>Start with entry points</li>
+<li><strong>Track instantiations</strong>: Record every <code>new ClassName()</code> encountered</li>
+<li><strong>Resolve virtual calls</strong>: Only consider subtypes that have been instantiated</li>
+<li>Repeat until no new types are discovered</li>
+</ol>
+<p><strong>Result</strong>: More precise than CHA - only includes methods of classes that are actually created.</p>
+<h4 id="rta-example">RTA Example</h4>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="n">Animal</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Dog</span><span class="p">();</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="n">a</span><span class="p">.</span><span class="na">speak</span><span class="p">();</span><span class="w">  </span><span class="c1">// Which speak() methods are possible?</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">}</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="kd">class</span> <span class="nc">Dog</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Animal</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">speak</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">bark</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="p">}</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="kd">class</span> <span class="nc">Cat</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Animal</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">speak</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">meow</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="p">}</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="kd">class</span> <span class="nc">Bird</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Animal</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">speak</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">chirp</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><strong>CHA result</strong>: Includes <code>Dog.speak()</code>, <code>Cat.speak()</code>, <code>Bird.speak()</code> (all subtypes)</p>
+<p><strong>RTA result</strong>: Only includes <code>Dog.speak()</code> (only instantiated type)</p>
+<h4 id="rta-trade-offs">RTA Trade-offs</h4>
+<p>✅ <strong>Pros:</strong>
+- More precise than CHA
+- Eliminates impossible calls to never-instantiated classes
+- Still fast and scalable
+- Sound (won't miss real calls)</p>
+<p>❌ <strong>Cons:</strong>
+- Slower than CHA (must analyze method bodies)
+- Requires tracking instantiation sites
+- Still over-approximates in some cases</p>
+<h3 id="cha-vs-rta-comparison">CHA vs RTA Comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>CHA</th>
+<th>RTA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Speed</strong></td>
+<td>Fastest</td>
+<td>Fast</td>
+</tr>
+<tr>
+<td><strong>Precision</strong></td>
+<td>Lower (all subtypes)</td>
+<td>Higher (only instantiated)</td>
+</tr>
+<tr>
+<td><strong>Analysis cost</strong></td>
+<td>Class hierarchy only</td>
+<td>Bytecode scanning required</td>
+</tr>
+<tr>
+<td><strong>Call graph size</strong></td>
+<td>Larger</td>
+<td>Smaller</td>
+</tr>
+<tr>
+<td><strong>Use case</strong></td>
+<td>Quick overview</td>
+<td>More accurate analysis</td>
+</tr>
+</tbody>
+</table>
+<h3 id="when-to-use-each-algorithm">When to Use Each Algorithm</h3>
+<p><strong>Use CHA when:</strong>
+- You need fast results
+- You want maximum soundness (catch everything)
+- Precision is less important</p>
+<p><strong>Use RTA when:</strong>
+- You need more accurate call graphs
+- You want to reduce false positives
+- Analysis time is acceptable</p>
+<h2 id="how-cg4j-uses-these-algorithms">How cg4j Uses These Algorithms</h2>
+<p>cg4j provides two engines:</p>
+<h3 id="wala-engine">WALA Engine</h3>
+<ul>
+<li>Uses <strong>RTA</strong> (Rapid Type Analysis)</li>
+<li>More mature and feature-rich</li>
+<li>Handles complex Java features</li>
+</ul>
+<h3 id="asm-engine">ASM Engine</h3>
+<ul>
+<li>Uses <strong>RTA</strong> (Rapid Type Analysis) with fixed-point iteration</li>
+<li>Faster and more lightweight</li>
+<li>Handles lambda expressions and method references</li>
+<li>Good for accurate, efficient call graph construction</li>
+</ul>
+<p><strong>Usage:</strong>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># ASM engine (uses RTA)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>java<span class="w"> </span>-jar<span class="w"> </span>cg4j.jar<span class="w"> </span>-j<span class="w"> </span>app.jar<span class="w"> </span>--engine<span class="o">=</span>asm
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># WALA engine (uses RTA)</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>java<span class="w"> </span>-jar<span class="w"> </span>cg4j.jar<span class="w"> </span>-j<span class="w"> </span>app.jar<span class="w"> </span>--engine<span class="o">=</span>wala
+</span></code></pre></div></p>
+<h3 id="worklist-algorithm">Worklist Algorithm</h3>
+<p>cg4j uses a worklist-based approach for call graph construction:</p>
+<ol>
+<li>
+<p><strong>Start with entry points</strong> (all public methods in cg4j)</p>
+</li>
+<li>
+<p><strong>Main worklist pass - for each reachable method:</strong></p>
+</li>
+<li>Scan method bytecode for call sites</li>
+<li>Track instantiations (<code>new</code> expressions)</li>
+<li>Resolve virtual/interface calls using RTA</li>
+<li>Process lambda <code>invokedynamic</code> sites (ASM engine)</li>
+<li>
+<p>Add discovered methods to worklist</p>
+</li>
+<li>
+<p><strong>Fixed-point re-resolution (ASM engine only):</strong></p>
+</li>
+<li>After the main worklist completes, re-resolve all virtual/interface call sites</li>
+<li>Recovers edges missed due to worklist ordering (e.g., lambda classes registered late)</li>
+<li>
+<p>Iterates until no new edges are discovered (typically 1-2 passes)</p>
+</li>
+<li>
+<p><strong>Repeat</strong> until convergence</p>
+</li>
+</ol>
+<h4 id="why-fixed-point-iteration">Why Fixed-Point Iteration?</h4>
+<p>The RTA worklist is single-pass: when method A calls an interface method, only types instantiated <em>before</em> A is processed are found as targets. Types instantiated <em>after</em> (e.g., lambda classes created later in the worklist) are missed because A is never revisited.</p>
+<p><strong>Example:</strong>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// Method A processes Function1.invoke() call</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1">// Only finds lambda classes already registered</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1">// Method B later creates a new lambda</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1">// A never learns about B&#39;s lambda</span>
+</span></code></pre></div></p>
+<p><strong>Solution:</strong> After the main worklist, re-resolve all virtual/interface call sites against the complete set of instantiated types. This recovers edges to types that were registered late in the worklist. Converges quickly since types don't recursively create new types.</p>
+<h2 id="how-cg4j-builds-call-graphs">How cg4j Builds Call Graphs</h2>
+<ol>
+<li><strong>Load JAR file</strong> and dependencies</li>
+<li><strong>Find entry points</strong> (all public methods)</li>
+<li><strong>Build class hierarchy</strong> from loaded classes</li>
+<li><strong>Run worklist algorithm</strong>:</li>
+<li>Process each reachable method</li>
+<li>Extract call sites from bytecode</li>
+<li>Track instantiations (<code>new</code> expressions)</li>
+<li>Process lambda <code>invokedynamic</code> sites (ASM engine)</li>
+<li>Resolve virtual/interface calls using RTA</li>
+<li>Expand the call graph iteratively</li>
+<li><strong>Fixed-point re-resolution</strong> (ASM engine):</li>
+<li>Re-resolve all virtual/interface calls with complete type set</li>
+<li>Recover edges to late-registered types</li>
+<li><strong>Output CSV</strong> with source → target edges</li>
+</ol>
+<h2 id="limitations">Limitations</h2>
+<h3 id="what-cg4j-handles">What cg4j Handles</h3>
+<p>✅ Direct method calls
+✅ Virtual method calls (using RTA)
+✅ Interface method calls
+✅ Constructor calls
+✅ Static method calls
+✅ Lambda expressions and method references
+✅ Static initializers (<code>&lt;clinit&gt;</code>)</p>
+<h3 id="what-cg4j-may-miss">What cg4j May Miss</h3>
+<p>❌ Reflection (<code>Method.invoke()</code>, <code>Constructor.newInstance()</code>)
+❌ Dynamic proxy calls (<code>Proxy.newProxyInstance()</code>)
+❌ Method handles (<code>MethodHandle.invoke()</code>)
+❌ Native methods
+❌ Custom <code>invokedynamic</code> bootstraps (non-lambda)</p>
+<h2 id="key-terminology">Key Terminology</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Static call</strong></td>
+<td>Direct method call, target known at compile-time</td>
+</tr>
+<tr>
+<td><strong>Virtual call</strong></td>
+<td>Method call through object reference, resolved at runtime</td>
+</tr>
+<tr>
+<td><strong>Entry point</strong></td>
+<td>Starting method for analysis (e.g., <code>main()</code>, public methods)</td>
+</tr>
+<tr>
+<td><strong>Reachable</strong></td>
+<td>Method that can be called from an entry point</td>
+</tr>
+<tr>
+<td><strong>Call site</strong></td>
+<td>Location in code where a method call occurs</td>
+</tr>
+<tr>
+<td><strong>Receiver type</strong></td>
+<td>Type of object on which a method is called</td>
+</tr>
+</tbody>
+</table>
+<h2 id="further-reading">Further Reading</h2>
+<h3 id="foundational-papers">Foundational Papers</h3>
+<p><strong>CHA (Class Hierarchy Analysis):</strong>
+- Dean, J., Grove, D., and Chambers, C. (1995). <em>Optimization of Object-Oriented Programs Using Static Class Hierarchy Analysis</em>. ECOOP'95.
+  - <a href="https://web.cs.ucla.edu/~palsberg/tba/papers/dean-grove-chambers-ecoop95.pdf">PDF</a>
+  - The original paper introducing CHA for call graph construction</p>
+<p><strong>RTA (Rapid Type Analysis):</strong>
+- Bacon, D. F. and Sweeney, P. F. (1996). <em>Fast Static Analysis of C++ Virtual Function Calls</em>. OOPSLA'96.
+  - <a href="https://people.cs.vt.edu/ryder/516/sp03/papers/baconOOPSLA96.pdf">PDF</a>
+  - Introduces RTA as a more precise alternative to CHA by tracking instantiated types</p>
+<h3 id="additional-resources">Additional Resources</h3>
+<ul>
+<li><a href="http://wala.sourceforge.net/">WALA Documentation</a> - Framework used by cg4j</li>
+<li><a href="https://yanniss.github.io/points-to-tutorial15.pdf">Call Graph Construction Algorithms</a> - Comprehensive tutorial on points-to analysis</li>
+<li><a href="https://cs.au.dk/~amoeller/spa/">Static Analysis Overview</a> - Course materials on static program analysis</li>
+</ul>
+<h2 id="quick-reference">Quick Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>WALA (RTA)</th>
+<th>ASM (RTA)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Speed</td>
+<td>✅ Fast</td>
+<td>✅ Very fast</td>
+</tr>
+<tr>
+<td>Call graph coverage</td>
+<td>⚠️ Moderate</td>
+<td>✅ Higher</td>
+</tr>
+<tr>
+<td>Lambda support</td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+</tr>
+<tr>
+<td>Handle reflection</td>
+<td>❌ Limited</td>
+<td>❌ No</td>
+</tr>
+<tr>
+<td>Sound results</td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+</tr>
+<tr>
+<td>Large programs</td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note</strong>: Benchmarks show ASM typically finds more edges and nodes than WALA, with significant improvement in lambda and method reference coverage.</p>
+<p><strong>Recommendation</strong>: Use ASM for most analysis tasks (faster, better coverage). Use WALA if you need specific WALA framework features.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/cg4j/cg4j" target="_blank" rel="noopener" title="CG4j on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://x.com/cg4j_net" target="_blank" rel="noopener" title="CG4j on X" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M357.2 48h70.6L273.6 224.2 455 464H313L201.7 318.6 74.5 464H3.8l164.9-188.5L-5.2 48h145.6l100.5 132.9zm-24.8 373.8h39.1L119.1 88h-42z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
